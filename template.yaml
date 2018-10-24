@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Resources:
+    HelloSamFunction:
+        Type: 'AWS::Serverless::Function'
+        Properties:
+            Handler: com.importre.example.Hello::handleRequest
+            CodeUri: build/libs/hello-sam-0.0.1-all.jar
+            Runtime: java8
+            Events:
+                HelloSam:
+                    Type: Api
+                    Properties:
+                        Path: /hello
+                        Method: get
+Outputs:
+    HelloSamApi:
+        Description: "API Gateway endpoint URL for Prod stage for HelloSamFunction"
+        Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+    HelloSamFunction:
+        Description: "Hello World Lambda Function ARN"
+        Value: !GetAtt HelloSamFunction.Arn
+    HelloSamFunctionIamRole:
+        Description: "Implicit IAM Role created for Hello World function"
+        Value: !GetAtt HelloSamFunctionRole.Arn
