@@ -12,6 +12,7 @@ object Version {
         }
     }
 
+    val gson = "2.8.5"
     val shadow = "4.0.1"
     val junit = "4.12"
 }

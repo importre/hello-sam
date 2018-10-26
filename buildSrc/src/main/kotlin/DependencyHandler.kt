@@ -7,5 +7,10 @@ fun DependencyHandler.aws(
 
 fun DependencyHandler.junit(): Any = "junit:junit:${Version.junit}"
 
-fun DependencyHandler.kotlinx(module: String, version: String? = null): Any =
-    "org.jetbrains.kotlinx:kotlinx-$module${version?.let { ":$version" } ?: ""}"
+fun DependencyHandler.kotlinx(
+    module: String,
+    version: String? = null
+): Any = "org.jetbrains.kotlinx:kotlinx-$module${version?.let { ":$version" } ?: ""}"
+
+fun DependencyHandler.gson(): Any = "com.google.code.gson:gson:${Version.gson}"
+

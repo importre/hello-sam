@@ -3,7 +3,6 @@ package com.importre.example
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
-import kotlinx.serialization.json.JSON
 import org.junit.Before
 import org.junit.Test
 
@@ -25,11 +24,8 @@ class AppTest {
             "application/json; charset=utf-8"
         )
 
-        val content = result.body
-        assertNotNull(content)
-
-        val response = JSON.parse<Response>(content)
-        assertEquals(response.message, "Hello, SAM!")
+        val response = result.body.from(Response::class)
+        assertEquals(response?.message, "Hello, SAM!")
     }
 
     @Test
@@ -46,7 +42,7 @@ class AppTest {
         val content = result.body
         assertNotNull(content)
 
-        val response = JSON.parse<Response>(content)
-        assertEquals(response.message, "Hello, Heo!")
+        val response = result.body.from(Response::class)
+        assertEquals(response?.message, "Hello, Heo!")
     }
 }
