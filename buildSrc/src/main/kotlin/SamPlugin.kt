@@ -9,12 +9,17 @@ import java.io.File
 
 class SamPlugin : Plugin<Project> {
 
-    private val template1File = "template.yaml"
-    private val template2File = "package.yaml"
+    private val groupName = "sam"
+
+    private val Project.generatedDir
+        get() = File(buildDir, "generated").apply(File::mkdirs)
+    private val Project.template1File
+        get() = File(generatedDir, "template.yaml")
+    private val Project.template2File
+        get() = File(generatedDir, "package.yaml")
 
     override fun apply(target: Project): Unit = target.run {
         val sam = extensions.create(SamExtension.name, SamExtension::class.java)
-        val temp = File(buildDir, "tmp").apply { takeUnless { exists() }?.mkdirs() }
         tasks {
             val clean = getByName("clean")
             val shadowJar = getByName("shadowJar")
@@ -24,9 +29,9 @@ class SamPlugin : Plugin<Project> {
                 }
 
             val templateYamlTask = register("generateTemplateYaml") {
-                group = "sam"
+                group = groupName
                 doLast {
-                    val out = File(temp, "template.yaml").outputStream()
+                    val out = template1File.outputStream()
                     YAMLMapper(YAMLFactory())
                         .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
                         .writeValue(out, sam.template)
@@ -36,29 +41,40 @@ class SamPlugin : Plugin<Project> {
             }
 
             val packageTask = register("packageSamApp", Exec::class.java) {
-                group = "sam"
+                group = groupName
                 workingDir = rootDir
                 commandLine = listOf(
                     "sam", "package",
-                    "--template-file", "${File(temp, template1File)}",
+                    "--template-file", template1File,
                     "--s3-bucket", sam.s3Bucket,
-                    "--output-template-file", "${File(temp, template2File)}"
+                    "--output-template-file", template2File
                 )
                 dependsOn(templateYamlTask)
                 mustRunAfter(templateYamlTask)
             }
 
             register("deploySamApp", Exec::class.java) {
-                group = "sam"
+                group = groupName
                 workingDir = rootDir
                 commandLine = listOf(
                     "sam", "deploy",
-                    "--template-file", "${File(temp, template2File)}",
+                    "--template-file", template2File,
                     "--stack-name", sam.stackName,
                     "--capabilities", "CAPABILITY_IAM"
                 )
                 dependsOn(packageTask)
                 mustRunAfter(packageTask)
+            }
+
+            register("runLocalSam", Exec::class.java) {
+                group = groupName
+                workingDir = rootDir
+                commandLine = listOf(
+                    "sam", "local",
+                    "start-api", "--template", "$template1File"
+                )
+                dependsOn(templateYamlTask)
+                mustRunAfter(templateYamlTask)
             }
         }
     }
