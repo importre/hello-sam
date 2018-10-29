@@ -8,5 +8,5 @@ data class SamTemplate(
     val transform: String = "AWS::Serverless-2016-10-31",
 
     @get:JsonProperty("Resources")
-    val resources: HashMap<String, SamResource> = LinkedHashMap()
+    val resources: LinkedHashMap<String, SamResource> = LinkedHashMap()
 )

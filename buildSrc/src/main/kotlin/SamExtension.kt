@@ -7,12 +7,12 @@ open class SamExtension(
         const val name = "sam"
     }
 
-    fun functions(init: SamFunctions.() -> Unit) {
-        SamFunctions()
-            .also(init)
-            .functions
-            .associateTo(template.resources) {
-                it.name to it
-            }
+    operator fun String.invoke(
+        type: SamResource.Type,
+        init: SamResource.() -> Unit
+    ) {
+        SamResource(name = this, type = type)
+            .apply(init)
+            .apply { template.resources += name to this }
     }
 }

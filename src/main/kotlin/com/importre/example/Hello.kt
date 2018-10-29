@@ -1,5 +1,6 @@
 package com.importre.example
 
+import arrow.core.Option
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent as RequestEvent
@@ -8,15 +9,11 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 class Hello : RequestHandler<RequestEvent, ResponseEvent> {
 
     override fun handleRequest(
-        input: RequestEvent?,
+        request: RequestEvent?,
         context: Context?
-    ): ResponseEvent = ResponseEvent()
-        .apply {
-            val name = input?.queryStringParameters?.get("name") ?: "SAM"
-            val response = Response(message = "Hello, ${name.capitalize()}!")
-
-            statusCode = 200
-            headers = mapOf("Content-Type" to "application/json; charset=utf-8")
-            body = response.json()
-        }
+    ): ResponseEvent = Option
+        .fromNullable(request?.queryStringParameters?.get("name"))
+        .toEither { "SAM" }
+        .fold(::makeGreeting, ::makeGreeting)
+        .let(::makeResponseEvent)
 }

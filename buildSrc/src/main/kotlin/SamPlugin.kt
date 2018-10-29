@@ -20,6 +20,7 @@ class SamPlugin : Plugin<Project> {
 
     override fun apply(target: Project): Unit = target.run {
         val sam = extensions.create(SamExtension.name, SamExtension::class.java)
+
         tasks {
             val clean = getByName("clean")
             val shadowJar = getByName("shadowJar")
