@@ -27,14 +27,13 @@ Custom Preprocessor: false
 sam {
     s3Bucket = "riiid-dev-hello"
     stackName = "hello-sam"
-    "HelloSamFunction"(SamResource.Type.FUNCTION) {
+    "HelloSamFunction"(SamResource.Type.FUNCTION) {                     // <1>
         properties {
             handler = "com.importre.example.Hello::handleRequest"
-            codeUri = "$buildDir/libs/${project.name}-$version-all.jar"
-            runtime = SamResource.Properties.Runtime.JAVA8
+            codeUri = "$buildDir/libs/${project.name}-$version-all.jar" // <2>
+            runtime = SamResource.Properties.Runtime.JAVA8              // <3>
             events {
-                "HelloSam" {
-                    type = SamEvent.Type.API
+                "HelloSam"(SamEvent.Type.API) {                         // <4>
                     properties {
                         path = "/hello"
                         method = SamEvent.Properties.Method.GET
@@ -45,6 +44,10 @@ sam {
     }
 }
 ----
+<1> 리소스가 함수면 타입 생략 가능 (``"HelloSamFunction" { ... }``)
+<2> 함수의 프로퍼티에 ``codeUri``가 생략되면 ``build/libs/${project.name}-$version-all.jar``파일을 찾음
+<3> java8이 기본값이므로 생략 가능
+<4> 이벤트 타입이 API면 생략 가능 (``"HelloSam { ... }``)
 
 
 == How to use

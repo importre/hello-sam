@@ -24,14 +24,11 @@ dependencies {
 sam {
     s3Bucket = "riiid-dev-hello"
     stackName = "hello-sam"
-    "HelloSamFunction"(SamResource.Type.FUNCTION) {
+    "HelloSamFunction" {
         properties {
             handler = "com.importre.example.Hello::handleRequest"
-            codeUri = "$buildDir/libs/${project.name}-$version-all.jar"
-            runtime = SamResource.Properties.Runtime.JAVA8
             events {
                 "HelloSam" {
-                    type = SamEvent.Type.API
                     properties {
                         path = "/hello"
                         method = SamEvent.Properties.Method.GET

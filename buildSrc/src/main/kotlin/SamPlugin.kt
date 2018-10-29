@@ -32,10 +32,20 @@ class SamPlugin : Plugin<Project> {
             val templateYamlTask = register("generateTemplateYaml") {
                 group = groupName
                 doLast {
-                    val out = template1File.outputStream()
+                    val output = File(
+                        buildDir, arrayOf(
+                            "libs",
+                            "${project.name}-$version-all.jar"
+                        ).joinToString(File.separator)
+                    )
+                    sam.template.resources
+                        .values
+                        .filter { it.type == SamResource.Type.FUNCTION }
+                        .filter { it.properties.codeUri.isEmpty() && output.exists() }
+                        .forEach { it.properties.codeUri = output.absolutePath }
                     YAMLMapper(YAMLFactory())
                         .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
-                        .writeValue(out, sam.template)
+                        .writeValue(template1File.outputStream(), sam.template)
                 }
                 dependsOn(shadowJar)
                 mustRunAfter(shadowJar)

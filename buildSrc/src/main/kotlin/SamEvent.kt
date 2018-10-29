@@ -6,7 +6,7 @@ data class SamEvent(
     val name: String,
 
     @get:JsonProperty("Type")
-    var type: Type = Type.API,
+    var type: Type,
 
     @get:JsonProperty("Properties")
     var properties: Properties = Properties()
@@ -21,7 +21,7 @@ data class SamEvent(
         var path: String = "",
 
         @get:JsonProperty("Method")
-        var method: Method = Method.GET
+        var method: Method? = null
     ) {
         enum class Method {
             @JsonProperty("get")

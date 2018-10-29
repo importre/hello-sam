@@ -8,7 +8,7 @@ open class SamExtension(
     }
 
     operator fun String.invoke(
-        type: SamResource.Type,
+        type: SamResource.Type = SamResource.Type.FUNCTION,
         init: SamResource.() -> Unit
     ) {
         SamResource(name = this, type = type)
