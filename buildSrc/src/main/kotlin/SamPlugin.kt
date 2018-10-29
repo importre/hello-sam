@@ -67,7 +67,7 @@ class SamPlugin : Plugin<Project> {
                 mustRunAfter(packageTask)
             }
 
-            register("runLocalSam", Exec::class.java) {
+            register("runLocalSamApp", Exec::class.java) {
                 group = groupName
                 workingDir = rootDir
                 commandLine = listOf(

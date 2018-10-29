@@ -62,7 +62,7 @@ sam {
 .shell
 [source, zsh, linenums]
 ----
-% ./gradlew runLocalSam
+% ./gradlew runLocalSamApp
 ----
 
 http://127.0.0.1:3000/hello or http://127.0.0.1:3000/hello?name=world 확인
