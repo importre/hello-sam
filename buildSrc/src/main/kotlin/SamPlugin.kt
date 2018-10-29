@@ -23,6 +23,11 @@ class SamPlugin : Plugin<Project> {
 
         tasks {
             val clean = getByName("clean")
+            val test = getByName("test")
+                .apply {
+                    dependsOn(clean)
+                    mustRunAfter(clean)
+                }
             val shadowJar = getByName("shadowJar")
                 .apply {
                     dependsOn(clean)
@@ -73,8 +78,8 @@ class SamPlugin : Plugin<Project> {
                     "--stack-name", sam.stackName,
                     "--capabilities", "CAPABILITY_IAM"
                 )
-                dependsOn(packageTask)
-                mustRunAfter(packageTask)
+                dependsOn(test, packageTask)
+                mustRunAfter(test, packageTask)
             }
 
             register("runLocalSamApp", Exec::class.java) {
