@@ -10,6 +10,8 @@ Custom Preprocessor: false
 
 = hello-sam
 
+https://github.com/importre?utf8=%E2%9C%93&tab=repositories&q=sample[image:https://img.shields.io/badge/importre-sample-yellow.svg[alt=importre.sample]]
+
 > https://kotlinlang.org/[Kotlin] 기반으로 AWS https://aws.amazon.com/lambda/[Lambda], https://aws.amazon.com/api-gateway/[API Gateway]를 테스트 및 배포하는 샘플
 
 
@@ -45,8 +47,8 @@ sam {
 }
 ----
 <1> 리소스가 함수면 타입 생략 가능 (``"HelloSamFunction" { ... }``)
-<2> 함수의 프로퍼티에 ``codeUri``가 생략되면 ``build/libs/${project.name}-$version-all.jar``파일을 찾음
-<3> java8이 기본값이므로 생략 가능
+<2> 생략 가능 (기분값: ``build/libs/${project.name}-$version-all.jar``)
+<3> 생략 가능 (기본값: java8)
 <4> 이벤트 타입이 API면 생략 가능 (``"HelloSam { ... }``)
 
 
@@ -85,3 +87,18 @@ http://127.0.0.1:3000/hello or http://127.0.0.1:3000/hello?name=world 확인
 . ``generateTemplateYaml``(``sam`` 기반으로 ``template.yaml``을 ``build/generated``에 생성)
 . ``packageSamApp``(``sam package`` 명령 실행)
 . ``deploySamApp``(``sam deploy`` 명령 실행)
+
+
+== References
+
+* https://github.com/gradle/kotlin-dsl[gradle/kotlin-dsl]
+* https://docs.aws.amazon.com/lambda/latest/dg/java-programming-model.html[Building Lambda Functions with Java]
+** https://github.com/aws/aws-sdk-java[aws/aws-sdk-java]
+* https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md[AWS Serverless Application Model (SAM)]
+* https://aws.amazon.com/ko/blogs/korea/new-aws-sam-local-beta-build-and-test-serverless-applications-locally/[AWS SAM Local]
+
+
+== Future works
+
+* ``sam``에 모자른 https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md[SAM 스펙] 구현하기
+* 예외처리
