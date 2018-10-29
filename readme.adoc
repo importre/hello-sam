@@ -1,0 +1,84 @@
+////
+Marked Style: asciidoctor-default
+Custom Processor: true
+Custom Preprocessor: false
+////
+:author: Jaewe Heo
+:email: jaeweheo@gmail.com
+:doctype: article
+:toc:
+
+= hello-sam
+
+> https://kotlinlang.org/[Kotlin] 기반으로 AWS https://aws.amazon.com/lambda/[Lambda], https://aws.amazon.com/api-gateway/[API Gateway]를 테스트 및 배포하는 샘플
+
+
+== Prerequisites
+
+* https://docs.aws.amazon.com/cli/latest/userguide/installing.html[awscli]
+* https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html[aws-sam-cli]
+
+
+== Initialization
+
+.build.gradle.kts
+[source, kotlin, linenums]
+----
+sam {
+    s3Bucket = "riiid-dev-hello"
+    stackName = "hello-sam"
+    "HelloSamFunction"(SamResource.Type.FUNCTION) {
+        properties {
+            handler = "com.importre.example.Hello::handleRequest"
+            codeUri = "$buildDir/libs/${project.name}-$version-all.jar"
+            runtime = SamResource.Properties.Runtime.JAVA8
+            events {
+                "HelloSam" {
+                    type = SamEvent.Type.API
+                    properties {
+                        path = "/hello"
+                        method = SamEvent.Properties.Method.GET
+                    }
+                }
+            }
+        }
+    }
+}
+----
+
+
+== How to use
+
+=== Test
+
+.shell
+[source, zsh, linenums]
+----
+% ./gradlew test
+----
+
+=== SAM local
+
+.shell
+[source, zsh, linenums]
+----
+% ./gradlew runLocalSam
+----
+
+http://127.0.0.1:3000/hello or http://127.0.0.1:3000/hello?name=world 확인
+
+=== Deployment
+
+.shell
+[source, zsh, linenums]
+----
+% ./gradlew deploySamApp
+----
+
+> 내부적으로는 다음과 같이 실행됨
+
+. ``clean``(``build`` 폴더 청소)
+. ``shadowJar``(``jar`` 파일 생성)
+. ``generateTemplateYaml``(``sam`` 기반으로 ``template.yaml``을 ``build/generated``에 생성)
+. ``packageSamApp``(``sam package`` 명령 실행)
+. ``deploySamApp``(``sam deploy`` 명령 실행)
