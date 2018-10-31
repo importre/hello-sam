@@ -47,7 +47,7 @@ sam {
 }
 ----
 <1> 리소스가 함수면 타입 생략 가능 (``"HelloSamFunction" { ... }``)
-<2> 생략 가능 (기분값: ``build/libs/${project.name}-$version-all.jar``)
+<2> 생략 가능 (기본값: ``build/libs/${project.name}-$version-all.jar``)
 <3> 생략 가능 (기본값: java8)
 <4> 이벤트 타입이 API면 생략 가능 (``"HelloSam { ... }``)
 
@@ -100,5 +100,6 @@ http://127.0.0.1:3000/hello or http://127.0.0.1:3000/hello?name=world 확인
 
 == Future works
 
-* ``sam``에 모자른 https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md[SAM 스펙] 구현하기
-* 예외처리
+* ``sam``에 모자른 https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md[SAM 스펙] 구현하기 → Plugin으로 배포
+** 예외처리
+
